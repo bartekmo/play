@@ -1,0 +1,31 @@
+resources:
+- name: vpc-a
+  type: compute.v1.network
+  properties:
+    autoCreateSubnetworks: no
+- name: vpc-b
+  type: compute.v1.network
+  properties:
+    autoCreateSubnetworks: no
+- name: subnet-a
+  type: compute.v1.subnetwork
+  properties:
+    region: europe-west1
+    network: $(ref.vpc-a.selfLink)
+    ipCidrRange: 192.168.0.0/24
+- name: subnet-b
+  type: compute.v1.subnetwork
+  properties:
+    region: europe-west1
+    network: $(ref.vpc-b.selfLink)
+    ipCidrRange: 192.168.1.0/24
+- name: peering-test
+  type: gcp-types/compute-v1:compute.networks.addPeering
+  properties:
+    name: peering-test
+    network: vpc-a
+    peerNetwork: $(ref.vpc-b.selfLink)
+    autoCreateRoutes: true
+    exchangeSubnetRoutes: true
+    exportCustomRoutes: true
+    importCustomRoutes: true
