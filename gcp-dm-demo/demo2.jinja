@@ -1,0 +1,73 @@
+{% set prefix=properties.prefix %}
+
+{% set images=[ "projects/debian-cloud/global/images/family/debian-9", "projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20200529"] %}
+
+resources:
+- name: {{prefix}}-vpc
+  type: compute.v1.network
+  properties:
+    autoCreateSubnetworks: false
+
+{% for indx in [1,2] %}
+- name: {{prefix}}-subnet{{indx}}
+  type: compute.v1.subnetwork
+  properties:
+    region: europe-west1
+    network: $(ref.{{prefix}}-vpc.selfLink)
+    ipCidrRange: 10.0.{{indx}}.0/24
+
+- name: {{prefix}}-vm{{indx}}
+  type: compute.v1.instance
+  properties:
+    zone: europe-west1-b
+    machineType: zones/europe-west1-b/machineTypes/f1-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: {{ images[loop.index0] }}
+    networkInterfaces:
+    - network: $(ref.{{prefix}}-vpc.selfLink)
+      subnetwork: $(ref.{{prefix}}-subnet{{indx}}.selfLink)
+  {% if indx==2 %}
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    tags:
+      items:
+      - ssh
+  {% endif %}
+{% endfor %}
+
+
+- name: {{prefix}}-fw-allow-ssh
+  type: compute.v1.firewall
+  properties:
+    network: $(ref.{{prefix}}-vpc.selfLink)
+    priority: 200
+    direction: INGRESS
+    sourceRanges:
+    - 0.0.0.0/0
+    targetTags:
+    - ssh
+    allowed:
+    - IPProtocol: TCP
+      ports:
+      - 22
+
+- name: {{prefix}}-fw-allow-internal
+  type: compute.v1.firewall
+  properties:
+    network: $(ref.{{prefix}}-vpc.selfLink)
+    priority: 200
+    direction: INGRESS
+    sourceTags:
+    - ssh
+    allowed:
+    - IPProtocol: TCP
+    - IPProtocol: UDP
+    - IPProtocol: ICMP
+    - IPProtocol: ESP
+    - IPProtocol: AH

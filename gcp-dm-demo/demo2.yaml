@@ -1,0 +1,87 @@
+resources:
+- name: demo2-vpc
+  type: compute.v1.network
+  properties:
+    autoCreateSubnetworks: false
+
+- name: demo2-subnet1
+  type: compute.v1.subnetwork
+  properties:
+    region: europe-west1
+    network: $(ref.demo2-vpc.selfLink)
+    ipCidrRange: 10.0.1.0/24
+
+- name: demo2-subnet2
+  type: compute.v1.subnetwork
+  properties:
+    region: europe-west1
+    network: $(ref.demo2-vpc.selfLink)
+    ipCidrRange: 10.0.2.0/24
+
+- name: demo2-vm1
+  type: compute.v1.instance
+  properties:
+    zone: europe-west1-b
+    machineType: zones/europe-west1-b/machineTypes/f1-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+    - network: $(ref.demo2-vpc.selfLink)
+      subnetwork: $(ref.demo2-subnet1.selfLink)
+
+- name: demo2-vm2
+  type: compute.v1.instance
+  properties:
+    zone: europe-west1-b
+    machineType: zones/europe-west1-b/machineTypes/f1-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20200529
+    networkInterfaces:
+    - network: $(ref.demo2-vpc.selfLink)
+      subnetwork: $(ref.demo2-subnet2.selfLink)
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    tags:
+      items:
+      - ssh
+
+- name: demo2-fw-allow-ssh
+  type: compute.v1.firewall
+  properties:
+    network: $(ref.demo2-vpc.selfLink)
+    priority: 200
+    direction: INGRESS
+    sourceRanges:
+    - 0.0.0.0/0
+    targetTags:
+    - ssh
+    allowed:
+    - IPProtocol: TCP
+      ports:
+      - 22
+
+- name: demo2-fw-allow-internal
+  type: compute.v1.firewall
+  properties:
+    network: $(ref.demo2-vpc.selfLink)
+    priority: 200
+    direction: INGRESS
+    sourceTags:
+    - ssh
+    allowed:
+    - IPProtocol: TCP
+    - IPProtocol: UDP
+    - IPProtocol: ICMP
+    - IPProtocol: ESP
+    - IPProtocol: AH

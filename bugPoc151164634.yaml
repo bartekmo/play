@@ -22,10 +22,10 @@ resources:
 - name: peering-test
   type: gcp-types/compute-v1:compute.networks.addPeering
   properties:
-    name: peering-test
     network: vpc-a
-    peerNetwork: $(ref.vpc-b.selfLink)
-    autoCreateRoutes: true
-    exchangeSubnetRoutes: true
-    exportCustomRoutes: true
-    importCustomRoutes: true
+    networkPeering:
+      name: peering-test    
+      network: $(ref.vpc-b.selfLink)
+      exchangeSubnetRoutes: true
+      exportCustomRoutes: true
+      importCustomRoutes: true

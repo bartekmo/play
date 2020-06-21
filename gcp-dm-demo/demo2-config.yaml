@@ -1,0 +1,8 @@
+imports:
+- path: demo2.jinja
+
+resources:
+- type: demo2.jinja
+  name: demo2
+  properties:
+    prefix: demo2
