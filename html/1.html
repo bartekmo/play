@@ -1,15 +1,20 @@
 <html>
 <head>
   <style>
+  body {
+    margin: 0px;
+    font-family: monospace;
+  }
   #mg {
     width: 1000px;
     height: 220px;
     border: 1px solid grey;
     padding: 0px;
     position: relative;
+    background-color: white;
   }
   #mg div {
-    background-color: black;
+    background-color: #234746;
     width:5px;
     margin: 2px;
     float: left;
@@ -19,6 +24,9 @@
   </style>
 </head>
 <body>
+  <img src="top-right.png" style="align: right; float: right; width: 80px;" />
+  <img src="xperts-logo.png" style="align:left; width: 120px; padding: 10px; margin-bottom: 40px;" />
+  <img src="mark-blue.png" style=" position: absolute; left: 950px; top: 270px; width: 100px;" />
 <script type="text/javascript">
 var times = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 var pingTime;
@@ -44,7 +52,7 @@ const loop = ()=>{
   req.timeout = beat*0.8;
   req.addEventListener("load", pong );
   req.addEventListener("timeout", pongTimeout );
-  //req.open( "GET", window.location.href, true );
+  //req.open( "GET", window.location.href+"?"+Math.random(), true );
   req.open( "GET", 'https://api.ipify.org/', true );
   pingTime = new Date().getTime();
   req.send();
