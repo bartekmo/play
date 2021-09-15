@@ -5,7 +5,7 @@ cd /root
 virtualenv -p python3 venv
 source venv/bin/activate
 pip install google-cloud-bigquery
-pip install pandas
+pip install pandas pyarrow
 PROJECT_ID=`curl http://169.254.169.254/computeMetadata/v1/project/project-id -H "Metadata-Flavor: Google"`
 echo "
 from google.auth import compute_engine
