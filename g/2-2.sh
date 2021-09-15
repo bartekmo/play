@@ -28,4 +28,4 @@ client = bigquery.Client(
     credentials=credentials)
 print(client.query(query).to_dataframe())
 " > query.py
-cat query.py
+python query.py
