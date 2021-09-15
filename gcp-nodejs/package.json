@@ -1,0 +1,6 @@
+{
+  "lockfileVersion": 1,
+  "dependencies": {
+    "googleapis": "^52.1.0"
+  }
+}
