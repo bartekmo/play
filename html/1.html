@@ -52,8 +52,8 @@ const loop = ()=>{
   req.timeout = beat*0.8;
   req.addEventListener("load", pong );
   req.addEventListener("timeout", pongTimeout );
-  //req.open( "GET", window.location.href+"?"+Math.random(), true );
-  req.open( "GET", 'https://api.ipify.org/', true );
+  req.open( "GET", window.location.href+"?"+Math.random(), true );
+  //req.open( "GET", 'https://api.ipify.org/', true );
   pingTime = new Date().getTime();
   req.send();
   loopStep = setTimeout(loop,beat);
