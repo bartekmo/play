@@ -89,7 +89,7 @@ function showTimes() {
   }
   document.getElementById("mg").innerHTML = res;
   document.getElementById("avg").innerHTML = "Last: "+times[times.length-1]+"ms / Avg: "+(timesAvgSum/timesAvgCnt).toFixed(2)+"ms / beat: "+beat;
-  normalizeBeat(timesAvgSum/timesAvgCnt);
+  //normalizeBeat(timesAvgSum/timesAvgCnt);
 }
 
 var loopStep = setTimeout(loop, 2000);
